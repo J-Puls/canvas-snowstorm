@@ -53,7 +53,7 @@ snow(1, 1, 1, "white", 60, 800, 600, parentDiv);
 
 #### Output
 
-![example 1](example.gif)
+![example 1](https://github.com/J-Puls/canvas-snowstorm/raw/master/example.gif)
 
 ## Example over image
 
@@ -83,4 +83,4 @@ const parentDiv = document.getElementById("myContainer");
 snow(1, 1, 2, "white", 60, 800, 600, parentDiv);
 ```
 
-![example 2](example-2.gif)
+![example 2](https://github.com/J-Puls/canvas-snowstorm/raw/master/example-2.gif)
