@@ -1,0 +1,14 @@
+{
+  "name": "canvas-snowstorm",
+  "version": "0.1.14",
+  "description": "A dynamically generated snow animation for JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "author": "Jeff Puls",
+  "license": "MIT"
+}
