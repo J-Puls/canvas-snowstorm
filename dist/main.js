@@ -14,14 +14,13 @@ define("Flake", ["require", "exports", "randomInt"], function (require, exports,
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Flake = void 0;
-    randomInt_1 = __importDefault(randomInt_1);
     var Flake = /** @class */ (function () {
         function Flake(x, y, r, color) {
             this.x = x;
             this.y = y;
             this.r = r;
             this.color = color;
-            this.offset = randomInt_1.default(-99, 99);
+            this.offset = randomInt_1.randomInt(-99, 99);
             this.inc = 1;
         }
         Flake.prototype.draw = function (ctx) {
@@ -88,8 +87,6 @@ define("index", ["require", "exports", "generateFlakes", "drawShapes"], function
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.snow = void 0;
-    generateFlakes_1 = __importDefault(generateFlakes_1);
-    drawShapes_1 = __importDefault(drawShapes_1);
     exports.snow = function (speed, scale, amount, color, fps, w, h, el) {
         if (speed === void 0) { speed = 1; }
         if (scale === void 0) { scale = 1; }
@@ -104,14 +101,14 @@ define("index", ["require", "exports", "generateFlakes", "drawShapes"], function
         canvas.classList.add("canvas-snowstorm");
         var ctx = canvas.getContext("2d");
         el.appendChild(canvas);
-        var back = generateFlakes_1.default(1, amount, scale, color, w, h);
-        var mid = generateFlakes_1.default(2, amount, scale, color, w, h);
-        var fore = generateFlakes_1.default(3, amount, scale, color, w, h);
+        var back = generateFlakes_1.generateFlakes(1, amount, scale, color, w, h);
+        var mid = generateFlakes_1.generateFlakes(2, amount, scale, color, w, h);
+        var fore = generateFlakes_1.generateFlakes(3, amount, scale, color, w, h);
         var moveShapes = function () {
             ctx.clearRect(0, 0, w, h);
-            drawShapes_1.default(ctx, back, 5, h, w, speed);
-            drawShapes_1.default(ctx, mid, 12.5, h, w, speed);
-            drawShapes_1.default(ctx, fore, 15, h, w, speed);
+            drawShapes_1.drawShapes(ctx, back, 5, h, w, speed);
+            drawShapes_1.drawShapes(ctx, mid, 12.5, h, w, speed);
+            drawShapes_1.drawShapes(ctx, fore, 15, h, w, speed);
         };
         var animate = setInterval(moveShapes, 1000 / fps);
         document.body.addEventListener("resize", function () {

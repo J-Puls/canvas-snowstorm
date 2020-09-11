@@ -1,5 +1,5 @@
-import generateFlakes from "./generateFlakes";
-import drawShapes from "./drawShapes";
+import { generateFlakes } from "./generateFlakes";
+import { drawShapes } from "./drawShapes";
 
 export const snow = (
   speed = 1,

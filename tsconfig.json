@@ -3,7 +3,8 @@
   "compilerOptions": {
     "module": "amd",
     "target": "ES5",
-    "outFile": "./dist/main.js"
+    "outFile": "./dist/main.js",
+    "esModuleInterop": true
   },
   "files": ["src/index.ts"]
 }

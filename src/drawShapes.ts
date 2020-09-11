@@ -1,4 +1,4 @@
-import Flake from "./Flake";
+import { Flake } from "./Flake";
 import { updatePosition } from "./updatePosition";
 
 export const drawShapes = (
@@ -15,4 +15,3 @@ export const drawShapes = (
   });
 };
 export default drawShapes;
-

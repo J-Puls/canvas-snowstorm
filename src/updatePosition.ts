@@ -1,4 +1,4 @@
-import Flake from "./Flake";
+import { Flake } from "./Flake";
 
 export const updatePosition = (
   shape: Flake,
