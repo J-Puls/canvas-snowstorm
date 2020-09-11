@@ -1,10 +1,18 @@
 {
   "compilerOptions": {
-    "module": "amd",
     "target": "ES5",
-    "outFile": "./dist/main.js",
+    "outDir": "./dist/",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": false
+    "allowSyntheticDefaultImports": false,
+    "sourceRoot": "./src",
+    "sourceMap": true
   },
-  "files": ["src/index.ts"]
+  "files": [
+    "src/index.ts",
+    "src/drawShapes.ts",
+    "src/Flake.ts",
+    "src/generateFlakes.ts",
+    "src/randomInt.ts",
+    "src/updatePosition.ts"
+  ]
 }

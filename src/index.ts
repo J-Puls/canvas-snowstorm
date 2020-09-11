@@ -14,6 +14,9 @@ export const snow = (
   const canvas = document.createElement("canvas");
   canvas.width = w;
   canvas.height = h;
+  canvas.style.position = "absolute";
+  canvas.style.top = "0px";
+  canvas.style.left = "0px";
   canvas.classList.add("canvas-snowstorm");
   const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
   el.appendChild(canvas);
