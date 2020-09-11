@@ -2,7 +2,7 @@
   "extends": "@tsconfig/recommended/tsconfig.json",
   "compilerOptions": {
     "module": "amd",
-    "target": "ES2017",
+    "target": "ES5",
     "outFile": "./dist/main.js"
   },
   "files": ["src/index.ts"]
