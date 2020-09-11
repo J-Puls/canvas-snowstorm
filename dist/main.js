@@ -5,7 +5,7 @@ define("randomInt", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.randomInt = void 0;
-    exports.randomInt = function (min, max) {
+    exports.randomInt = (min, max) => {
         return Math.round(Math.random() * (max - min + 1) + min);
     };
     exports.default = exports.randomInt;
@@ -14,8 +14,8 @@ define("Flake", ["require", "exports", "randomInt"], function (require, exports,
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Flake = void 0;
-    var Flake = /** @class */ (function () {
-        function Flake(x, y, r, color) {
+    class Flake {
+        constructor(x, y, r, color) {
             this.x = x;
             this.y = y;
             this.r = r;
@@ -23,15 +23,14 @@ define("Flake", ["require", "exports", "randomInt"], function (require, exports,
             this.offset = randomInt_1.randomInt(-99, 99);
             this.inc = 1;
         }
-        Flake.prototype.draw = function (ctx) {
+        draw(ctx) {
             ctx.fillStyle = this.color;
             ctx.beginPath();
             ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
             ctx.closePath();
             ctx.fill();
-        };
-        return Flake;
-    }());
+        }
+    }
     exports.Flake = Flake;
     exports.default = Flake;
 });
@@ -41,12 +40,12 @@ define("generateFlakes", ["require", "exports", "Flake", "randomInt"], function 
     exports.generateFlakes = void 0;
     Flake_1 = __importDefault(Flake_1);
     randomInt_2 = __importDefault(randomInt_2);
-    exports.generateFlakes = function (size, amount, scale, clr, w, h) {
-        var arr = [];
-        var i = 0;
-        var color = function () {
+    exports.generateFlakes = (size, amount, scale, clr, w, h) => {
+        let arr = [];
+        let i = 0;
+        let color = () => {
             return clr === "random"
-                ? "hsl(" + Math.floor(Math.random() * 360) + ", 50%, 50%)"
+                ? `hsl(${Math.floor(Math.random() * 360)}, 50%, 50%)`
                 : clr;
         };
         while (i < amount * 100) {
@@ -61,7 +60,7 @@ define("updatePosition", ["require", "exports"], function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.updatePosition = void 0;
-    exports.updatePosition = function (shape, speed, multiplier, h) {
+    exports.updatePosition = (shape, speed, multiplier, h) => {
         shape.offset === -100 && (shape.inc = 1);
         shape.offset === 100 && (shape.inc = -1);
         shape.x =
@@ -75,8 +74,8 @@ define("drawShapes", ["require", "exports", "updatePosition"], function (require
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.drawShapes = void 0;
-    exports.drawShapes = function (ctx, flakeArr, multiplier, h, w, speed) {
-        flakeArr.forEach(function (flake) {
+    exports.drawShapes = (ctx, flakeArr, multiplier, h, w, speed) => {
+        flakeArr.forEach((flake) => {
             flake.draw(ctx);
             updatePosition_1.updatePosition(flake, speed, multiplier, h);
         });
@@ -87,31 +86,24 @@ define("index", ["require", "exports", "generateFlakes", "drawShapes"], function
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.snow = void 0;
-    exports.snow = function (speed, scale, amount, color, fps, w, h, el) {
-        if (speed === void 0) { speed = 1; }
-        if (scale === void 0) { scale = 1; }
-        if (amount === void 0) { amount = 1; }
-        if (color === void 0) { color = "white"; }
-        if (fps === void 0) { fps = 60; }
-        if (w === void 0) { w = window.innerWidth; }
-        if (h === void 0) { h = window.innerHeight; }
-        var canvas = document.createElement("canvas");
+    exports.snow = (speed = 1, scale = 1, amount = 1, color = "white", fps = 60, w = window.innerWidth, h = window.innerHeight, el) => {
+        const canvas = document.createElement("canvas");
         canvas.width = w;
         canvas.height = h;
         canvas.classList.add("canvas-snowstorm");
-        var ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext("2d");
         el.appendChild(canvas);
-        var back = generateFlakes_1.generateFlakes(1, amount, scale, color, w, h);
-        var mid = generateFlakes_1.generateFlakes(2, amount, scale, color, w, h);
-        var fore = generateFlakes_1.generateFlakes(3, amount, scale, color, w, h);
-        var moveShapes = function () {
+        let back = generateFlakes_1.generateFlakes(1, amount, scale, color, w, h);
+        let mid = generateFlakes_1.generateFlakes(2, amount, scale, color, w, h);
+        let fore = generateFlakes_1.generateFlakes(3, amount, scale, color, w, h);
+        const moveShapes = () => {
             ctx.clearRect(0, 0, w, h);
             drawShapes_1.drawShapes(ctx, back, 5, h, w, speed);
             drawShapes_1.drawShapes(ctx, mid, 12.5, h, w, speed);
             drawShapes_1.drawShapes(ctx, fore, 15, h, w, speed);
         };
-        var animate = setInterval(moveShapes, 1000 / fps);
-        document.body.addEventListener("resize", function () {
+        let animate = setInterval(moveShapes, 1000 / fps);
+        document.body.addEventListener("resize", () => {
             if (window.outerHeight !== h)
                 h = window.outerHeight;
             if (window.outerWidth !== w) {
