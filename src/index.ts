@@ -1,5 +1,5 @@
-import generateFlakes from "./src/generateFlakes";
-import drawShapes from "./src/drawShapes";
+import generateFlakes from "./generateFlakes";
+import drawShapes from "./drawShapes";
 
 export const snow = (
   speed = 1,
@@ -15,7 +15,7 @@ export const snow = (
   canvas.width = w;
   canvas.height = h;
   canvas.classList.add("canvas-snowstorm");
-  const ctx = canvas.getContext("2d");
+  const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
   el.appendChild(canvas);
 
   let back = generateFlakes(1, amount, scale, color, w, h);

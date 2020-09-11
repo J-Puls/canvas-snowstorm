@@ -1,2 +1,12 @@
-example.gif
-example-2.gif
+# modules
+node_modules
+
+# TypeScript source code
+src
+
+# TypeScript configuration
+tsconfig.json
+
+# VS Code configuration
+.vs
+

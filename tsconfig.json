@@ -1,0 +1,9 @@
+{
+  "extends": "@tsconfig/recommended/tsconfig.json",
+  "compilerOptions": {
+    "module": "amd",
+    "target": "ES2017",
+    "outFile": "./dist/index.js"
+  },
+  "files": ["src/index.ts"]
+}

@@ -8,6 +8,20 @@ A dynamically generated HTML snow animation, written in TypeScript.
 npm i canvas-snowstorm
 ```
 
+## Development
+
+Ensure TypeScript is enabled:
+
+```bash
+tsc -version
+```
+
+To build, run:
+
+```bash
+npm run-script build
+```
+
 ## Usage
 
 The `canvas-snowstorm` module exports a single function `snow`, which takes the following arguments:
@@ -23,7 +37,7 @@ The `canvas-snowstorm` module exports a single function `snow`, which takes the 
 
 **Note:** Increasing the "amount" and/or "fps" factors can be taxing on the CPU/GPU and result in jittery animation
 
-## Example over solid color
+### Example over solid color
 
 #### HTML
 
@@ -53,9 +67,9 @@ snow(1, 1, 1, "white", 60, 800, 600, parentDiv);
 
 #### Output
 
-![example 1](https://github.com/J-Puls/canvas-snowstorm/raw/master/example.gif)
+![example 1](https://i.ibb.co/Db3FpJz/example.gif)
 
-## Example over image
+### Example over image
 
 #### HTML
 
@@ -83,4 +97,4 @@ const parentDiv = document.getElementById("myContainer");
 snow(1, 1, 2, "white", 60, 800, 600, parentDiv);
 ```
 
-![example 2](https://github.com/J-Puls/canvas-snowstorm/raw/master/example-2.gif)
+![example 2](https://i.ibb.co/jMLCGZD/example-2.gif)
