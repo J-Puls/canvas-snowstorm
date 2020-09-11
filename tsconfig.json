@@ -1,10 +1,10 @@
 {
- 
   "compilerOptions": {
     "module": "amd",
-    "target": "ES6",
+    "target": "ES5",
     "outFile": "./dist/main.js",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": false
   },
   "files": ["src/index.ts"]
 }
