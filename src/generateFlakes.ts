@@ -1,32 +1,24 @@
 import Flake from "./Flake";
-import randomInt from "./randomInt";
 
-export const generateFlakes = (
-  size: number,
-  amount: number,
-  scale: number,
-  clr: string,
-  w: number,
-  h: number
-) => {
-  let arr = [] as Flake[];
-  let i = 0;
-  let color = () => {
-    return clr === "random"
-      ? `hsl(${Math.floor(Math.random() * 360)}, 50%, 50%)`
-      : clr;
+export const generateFlakes = (speed, scale, amount, color, h, w) => {
+  const randomX = () => {
+    return Math.round(Math.random() * w) + 1;
   };
-  while (i < amount * 100) {
-    arr.push(
-      new Flake(
-        randomInt(0, w),
-        randomInt(0, h),
-        Math.random() * (scale * size),
-        color()
-      )
-    );
-    i++;
+  const randomY = () => {
+    return -Math.round(Math.random() * amount) + 1;
+  };
+  const randomColor = () => {
+    return `hsl(${Math.floor(Math.random() * 360) + 1}, ${
+      100 - Math.floor(Math.random() * 50) + 1
+    }%, 50%)`;
+  };
+
+  const flakes = [] as Flake[];
+  for (let i = 0; i < amount; i++) {
+    const clr = color === "random" ? randomColor() : color;
+    flakes.push(new Flake(scale, randomX(), randomY(), speed, clr, h, w));
   }
-  return arr;
+  return flakes;
 };
+
 export default generateFlakes;

@@ -7,12 +7,5 @@
     "sourceRoot": "./src",
     "sourceMap": true
   },
-  "files": [
-    "src/index.ts",
-    "src/drawShapes.ts",
-    "src/Flake.ts",
-    "src/generateFlakes.ts",
-    "src/randomInt.ts",
-    "src/updatePosition.ts"
-  ]
+  "files": ["src/index.ts", "src/Flake.ts", "src/generateFlakes.ts"]
 }

@@ -1,46 +1,87 @@
-import { generateFlakes } from "./generateFlakes";
-import { drawShapes } from "./drawShapes";
+import Flake from "./Flake";
+import generateFlakes from "./generateFlakes";
 
-export const snow = (
-  speed = 1,
-  scale = 1,
-  amount = 1,
-  color = "white",
-  fps = 60,
-  w = window.innerWidth,
-  h = window.innerHeight,
-  el: HTMLElement
-) => {
-  const canvas = document.createElement("canvas");
-  canvas.width = w;
-  canvas.height = h;
-  canvas.style.position = "absolute";
-  canvas.style.top = "0px";
-  canvas.style.left = "0px";
-  canvas.classList.add("canvas-snowstorm");
-  const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
-  el.appendChild(canvas);
+class Snow {
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+  drawFlakes: (elapsedTime: number) => void;
+  flakes: Flake[];
+  fps: number;
+  h: number;
+  scale: number;
+  speed: number;
+  isPaused: boolean;
+  lastFrameTime: number;
+  renderer: number;
+  w: number;
+  root: HTMLElement;
+  constructor(
+    speed = 1,
+    scale = 1,
+    amount = 1,
+    color = "white",
+    fps = 30,
+    width = window.innerWidth,
+    height = window.innerHeight,
+    el: HTMLElement = document.body
+  ) {
+    this.h = height;
+    this.w = width;
+    this.root = el;
+    this.canvas = document.createElement("canvas");
+    this.canvas.width = width;
+    this.canvas.height = height;
+    this.canvas.style.position = "absolute";
+    this.canvas.style.top = "0px";
+    this.canvas.style.top = "0px";
+    this.ctx = this.canvas.getContext("2d");
+    this.scale = scale;
+    this.speed = speed;
+    this.isPaused = false;
 
-  let back = generateFlakes(1, amount, scale, color, w, h);
-  let mid = generateFlakes(2, amount, scale, color, w, h);
-  let fore = generateFlakes(3, amount, scale, color, w, h);
+    this.flakes = generateFlakes(
+      this.speed,
+      this.scale,
+      amount,
+      color,
+      this.h,
+      this.w
+    );
+    this.fps = Math.floor(1000 / fps);
+    this.lastFrameTime = 0;
+    this.renderer = null;
 
-  const moveShapes = () => {
-    ctx.clearRect(0, 0, w, h);
-    drawShapes(ctx, back, 5, h, w, speed);
-    drawShapes(ctx, mid, 12.5, h, w, speed);
-    drawShapes(ctx, fore, 15, h, w, speed);
+    this.drawFlakes = (elapsedTime) => {
+      // Calculate time delta from last render
+      const delta = elapsedTime - (this.lastFrameTime || 0);
+      // Queue an animation frame
+      requestAnimationFrame(this.drawFlakes);
+      // Skip this render if fps interval has not been reached or if paused
+      if ((this.lastFrameTime && delta < this.fps) || this.isPaused) return;
+      // Update the previous render time for next delta calculation
+      this.lastFrameTime = elapsedTime;
+      // Render frame
+      this.ctx.clearRect(0, 0, this.w, this.h);
+      for (const f of this.flakes) {
+        f.draw(this.ctx);
+      }
+    };
+  }
+
+  start = () => {
+    this.root.appendChild(this.canvas);
+    requestAnimationFrame(this.drawFlakes);
   };
+  pause = () => (this.isPaused = true);
+  play = () => (this.isPaused = false);
+  toggle = () => (this.isPaused = !this.isPaused);
 
-  let animate = setInterval(moveShapes, 1000 / fps);
-
-  document.body.addEventListener("resize", () => {
-    if (window.outerHeight !== h) h = window.outerHeight;
-    if (window.outerWidth !== w) {
-      clearInterval(animate);
-      w = window.outerWidth;
-      animate = setInterval(moveShapes, 1000 / fps);
+  changeScale = (newScale) => {
+    if (newScale === this.scale) return;
+    for (const f of this.flakes) {
+      f.r = newScale;
     }
-  });
-};
-export default snow;
+  };
+}
+
+export default Snow;
