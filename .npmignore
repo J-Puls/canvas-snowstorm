@@ -10,3 +10,5 @@ tsconfig.json
 # VS Code configuration
 .vs
 
+# Example website
+www

@@ -1,14 +1,26 @@
 {
   "name": "canvas-snowstorm",
   "version": "0.1.25",
-  "description": "A dynamically generated HTML snow animation, written in TypeScript. ☃",
+  "description": "A dynamically generated HTML Canvas snow animation, written in TypeScript. ☃",
   "main": "dist/index.js",
   "scripts": {
     "build": "echo \"Compiling to dist/...\" && tsc --p .",
     "devBuild": "tsc src/index.ts --outDir ./dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Jeff Puls",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/J-Puls/canvas-snowstorm"
+  },
+  "keywords": [
+    "HTML",
+    "HTMLCanvas",
+    "animation",
+    "canvas",
+    "snow",
+    "snowstorm"
+  ],
+  "author": "Jeff puls <jeff.puls@pm.me> (https://jpuls.dev)",
   "license": "MIT",
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
