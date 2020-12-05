@@ -1,11 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ES5",
+    "target": "es2016",
     "outDir": "./dist/",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": false,
     "sourceRoot": "./src",
     "sourceMap": true
   },
-  "files": ["src/index.ts", "src/Flake.ts", "src/generateFlakes.ts"]
+  "files": [
+    "src/index.ts",
+    "src/Flake.ts",
+    "src/generateFlakes.ts",
+    "src/randomColor.ts",
+    "src/customTypes.ts"
+  ]
 }

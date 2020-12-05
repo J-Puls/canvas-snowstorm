@@ -1,70 +1,101 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var generateFlakes_1 = __importDefault(require("./generateFlakes"));
-var Snow = /** @class */ (function () {
-    function Snow(speed, scale, amount, color, fps, width, height, el) {
-        var _this = this;
-        if (speed === void 0) { speed = 1; }
-        if (scale === void 0) { scale = 1; }
-        if (amount === void 0) { amount = 1; }
-        if (color === void 0) { color = "white"; }
-        if (fps === void 0) { fps = 30; }
-        if (width === void 0) { width = window.innerWidth; }
-        if (height === void 0) { height = window.innerHeight; }
-        if (el === void 0) { el = document.body; }
-        this.start = function () {
-            _this.root.appendChild(_this.canvas);
-            requestAnimationFrame(_this.drawFlakes);
+import generateFlakes from "./generateFlakes";
+import randomColor from "./randomColor";
+class Snow {
+    constructor(options) {
+        this.initialize = (parent) => {
+            this.parent = parent;
+            this.w = parent.clientWidth;
+            this.h = parent.clientHeight;
+            this.flakes = generateFlakes(this.speed, this.scale, this.amount, this.color, this.h, this.w, this.cycleColors);
+            this.canvas.width = parent.clientWidth;
+            this.canvas.height = parent.clientHeight;
         };
-        this.pause = function () { return (_this.isPaused = true); };
-        this.play = function () { return (_this.isPaused = false); };
-        this.toggle = function () { return (_this.isPaused = !_this.isPaused); };
-        this.changeScale = function (newScale) {
-            if (newScale === _this.scale)
+        this.autostart = (parent) => {
+            this.initialize(parent);
+            this.parent.appendChild(this.canvas);
+            requestAnimationFrame(this.drawFlakes);
+        };
+        this.inject = () => this.parent.appendChild(this.canvas);
+        this.start = () => (this.renderer = requestAnimationFrame(this.drawFlakes));
+        this.pause = () => (this.isPaused = true);
+        this.play = () => (this.isPaused = false);
+        this.toggle = () => (this.isPaused = !this.isPaused);
+        this.restart = () => {
+            cancelAnimationFrame(this.renderer);
+            this.initialize(this.parent);
+            this.parent.removeChild(this.canvas);
+            this.inject();
+            this.renderer = requestAnimationFrame(this.drawFlakes);
+        };
+        this.cycleShape = () => {
+            for (const f of this.flakes) {
+                f.shape = f.shape === "circle" ? "square" : "circle";
+            }
+        };
+        this.setShape = (shape) => {
+            if (!["circle", "square"].includes(shape)) {
+                console.error(`'${shape}'`, "is not a valid shape. Must be 'circle' or 'square'");
                 return;
-            for (var _i = 0, _a = _this.flakes; _i < _a.length; _i++) {
-                var f = _a[_i];
+            }
+            if (this.flakes[0].shape === shape)
+                return;
+            for (const f of this.flakes) {
+                f.shape = shape;
+            }
+        };
+        this.toggleRandomize = () => {
+            for (const f of this.flakes)
+                f.cycle = !f.cycle;
+        };
+        this.setRandomize = (val) => (this.cycleColors = val);
+        this.randomizeColors = () => {
+            for (const f of this.flakes)
+                f.color = randomColor();
+        };
+        this.changeColor = (color) => {
+            for (const f of this.flakes)
+                f.color = color;
+        };
+        this.changeScale = (newScale) => {
+            if (newScale === this.scale)
+                return;
+            for (const f of this.flakes) {
                 f.r = newScale;
             }
         };
-        this.h = height;
-        this.w = width;
-        this.root = el;
+        this.cycleColors = options.cycleColors || false;
+        this.scale = options.scale || 1;
+        this.speed = options.speed || 1;
+        this.isPaused = false;
+        this.fps = Math.floor(1000 / options.fps || 30);
+        this.lastFrameTime = 0;
+        this.amount = options.amount || 100;
+        this.color = options.color || { h: 0, s: 0, l: 100 };
         this.canvas = document.createElement("canvas");
-        this.canvas.width = width;
-        this.canvas.height = height;
         this.canvas.style.position = "absolute";
         this.canvas.style.top = "0px";
+        this.canvas.style.top = "0px";
+        this.canvas.className = "canvas-snowstorm";
         this.ctx = this.canvas.getContext("2d");
-        this.scale = scale;
-        this.speed = speed;
-        this.isPaused = false;
-        this.flakes = generateFlakes_1.default(this.speed, this.scale, amount, color, this.h, this.w);
-        this.fps = Math.floor(1000 / fps);
-        this.lastFrameTime = 0;
-        this.renderer = null;
-        this.drawFlakes = function (elapsedTime) {
+        this.parent;
+        this.renderer;
+        this.drawFlakes = (elapsedTime) => {
             // Calculate time delta from last render
-            var delta = elapsedTime - (_this.lastFrameTime || 0);
+            const delta = elapsedTime - (this.lastFrameTime || 0);
             // Queue an animation frame
-            requestAnimationFrame(_this.drawFlakes);
+            requestAnimationFrame(this.drawFlakes);
             // Skip this render if fps interval has not been reached or if paused
-            if ((_this.lastFrameTime && delta < _this.fps) || _this.isPaused)
+            if ((this.lastFrameTime && delta < this.fps) || this.isPaused)
                 return;
             // Update the previous render time for next delta calculation
-            _this.lastFrameTime = elapsedTime;
+            this.lastFrameTime = elapsedTime;
             // Render frame
-            _this.ctx.clearRect(0, 0, _this.w, _this.h);
-            for (var _i = 0, _a = _this.flakes; _i < _a.length; _i++) {
-                var f = _a[_i];
-                f.draw(_this.ctx);
+            this.ctx.clearRect(0, 0, this.w, this.h);
+            for (const f of this.flakes) {
+                f.draw(this.ctx);
             }
         };
     }
-    return Snow;
-}());
-exports.default = Snow;
+}
+export default Snow;
 //# sourceMappingURL=index.js.map

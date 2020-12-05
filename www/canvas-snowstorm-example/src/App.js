@@ -4,22 +4,24 @@ import "./App.css";
 
 function App() {
   let root;
-  const [snow, setSnow] = useState(null);
+  const [color, setColor] = useState({ h: 0, s: 50, l: 50 });
+  const [snow, setSnow] = useState(new Snow({ color }));
   const [scale, setScale] = useState(1);
-  const handleRandomize = (e) => {
-    const color = e.target.checked ? "random" : "white";
-    const canvas = root.firstChild;
-    root.removeChild(canvas);
-    setSnow(new Snow(1, 1, 300, color, 30, root.width, root.height, root));
+  const handleRandomize = () => snow && snow.randomizeColors();
+  const handleColorChange = (e) => {
+    snow && snow.changeColor({ h: e.target.value, s: 50, l: 50 });
   };
 
   useEffect(() => {
-    setSnow(new Snow(1, 1, 300, "white", 30, root.width, root.height, root));
-  }, [root]);
+    snow.flakes && snow.changeColor(color);
+  }, [snow.flakes, color]);
 
   useEffect(() => {
-    snow && snow.start();
-  }, [snow]);
+    root && snow.initialize(root);
+    root && snow.inject();
+    root && snow.start();
+    window.snow = snow;
+  }, [root, snow]);
 
   useEffect(() => {
     snow && snow.changeScale(scale);
@@ -39,12 +41,15 @@ function App() {
           onChange={(e) => setScale(e.target.value)}
           defaultValue={1}
         />
-        <label htmlFor="random-color">Randomize Colors </label>
+        <label htmlFor="color">Color</label>
         <input
-          type="checkbox"
-          name="random-color"
-          defaultChecked={false}
-          onChange={(e) => handleRandomize(e)}
+          name="color"
+          type="range"
+          min={0}
+          max={360}
+          step={1}
+          onChange={(e) => handleColorChange(e)}
+          defaultValue={0}
         />
         <div className="btn-container">
           <button className="btn pause-btn" onClick={() => snow.pause()}>
@@ -52,6 +57,12 @@ function App() {
           </button>
           <button className="btn resume-btn" onClick={() => snow.play()}>
             Resume
+          </button>
+          <button
+            className="btn randomize-btn"
+            onClick={() => snow.randomizeColors()}
+          >
+            Randomize Colors
           </button>
         </div>
       </div>

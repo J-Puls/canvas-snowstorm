@@ -1,36 +1,40 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.Flake = void 0;
-var Flake = /** @class */ (function () {
-    function Flake(r, x, y, dy, color, h, w) {
-        var _this = this;
-        this.updatePosition = function () {
-            if (_this.y >= _this.h) {
-                _this.y = -_this.r;
-                _this.x > _this.w / 2 ? _this.w / 2 - _this.startX : _this.startX;
-                _this.dx = _this.dy / 2;
+export class Flake {
+    constructor(r, x, y, dy, color, h, w, shape, cycle) {
+        this.updatePosition = () => {
+            if (this.y >= this.h) {
+                this.y = -this.r;
+                this.x > this.w / 2 ? this.w / 2 - this.startX : this.startX;
+                this.dx = this.dy / 2;
             }
             else {
-                _this.y += _this.dy;
-                _this.x += _this.dx;
+                this.y += this.dy;
+                this.x += this.dx;
             }
-            if (_this.dxLimit < 0) {
-                _this.dx > _this.dxLimit
-                    ? (_this.dx -= 0.005)
-                    : (_this.dxLimit = -_this.dxLimit);
+            if (this.dxLimit < 0) {
+                this.dx > this.dxLimit
+                    ? (this.dx -= 0.005)
+                    : (this.dxLimit = -this.dxLimit);
             }
-            else if (_this.dxLimit > 0) {
-                _this.dx < _this.dxLimit
-                    ? (_this.dx += 0.005)
-                    : (_this.dxLimit = -_this.dxLimit);
+            else if (this.dxLimit > 0) {
+                this.dx < this.dxLimit
+                    ? (this.dx += 0.005)
+                    : (this.dxLimit = -this.dxLimit);
             }
         };
-        this.draw = function (ctx) {
-            ctx.fillStyle = _this.color;
-            ctx.beginPath();
-            ctx.arc(_this.x, _this.y, _this.r, 0, Math.PI * 2);
-            ctx.fill();
-            _this.updatePosition();
+        this.draw = (ctx) => {
+            if (this.cycle) {
+                this.color.h = this.color.h < 360 ? this.color.h + 1 : 0;
+            }
+            ctx.fillStyle = `hsl(${this.color.h}, ${this.color.s}%, ${this.color.l}%)`;
+            if (this.shape === "circle") {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            else if (this.shape === "square") {
+                ctx.fillRect(this.x - this.r, this.y - this.r, this.r * 2, this.r * 2);
+            }
+            this.updatePosition();
         };
         this.r = r;
         this.x = x;
@@ -43,9 +47,9 @@ var Flake = /** @class */ (function () {
         this.color = color;
         this.h = h;
         this.w = w;
+        this.shape = shape;
+        this.cycle = cycle;
     }
-    return Flake;
-}());
-exports.Flake = Flake;
-exports.default = Flake;
+}
+export default Flake;
 //# sourceMappingURL=Flake.js.map

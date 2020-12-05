@@ -12,7 +12,10 @@ body {
   width: 100%;
   height: 100vh;
 }
-
+.snowstorm {
+  width: 100%;
+  height: 100vh;
+}
 .controls {
   padding: 2em;
   background-color: #000000aa;
@@ -73,4 +76,7 @@ canvas {
 }
 .resume-btn {
   background-color: #229749;
+}
+.randomize-btn {
+  background-color: dodgerblue;
 }

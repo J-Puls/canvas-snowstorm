@@ -1,4 +1,7 @@
+import { HSLColor } from "./customTypes";
+
 export class Flake {
+  cycle: boolean;
   r: number;
   x: number;
   startX: number;
@@ -7,10 +10,21 @@ export class Flake {
   dx: number;
   dxLimit: number;
   dy: number;
-  color: string;
+  color: HSLColor;
   h: number;
   w: number;
-  constructor(r, x, y, dy, color, h, w) {
+  shape: string;
+  constructor(
+    r: number,
+    x: number,
+    y: number,
+    dy: number,
+    color: HSLColor,
+    h: number,
+    w: number,
+    shape: string,
+    cycle: boolean
+  ) {
     this.r = r;
     this.x = x;
     this.startX = x;
@@ -22,6 +36,8 @@ export class Flake {
     this.color = color;
     this.h = h;
     this.w = w;
+    this.shape = shape;
+    this.cycle = cycle;
   }
   updatePosition = () => {
     if (this.y >= this.h) {
@@ -43,10 +59,17 @@ export class Flake {
     }
   };
   draw = (ctx: CanvasRenderingContext2D) => {
-    ctx.fillStyle = this.color;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-    ctx.fill();
+    if (this.cycle) {
+      this.color.h = this.color.h < 360 ? this.color.h + 1 : 0;
+    }
+    ctx.fillStyle = `hsl(${this.color.h}, ${this.color.s}%, ${this.color.l}%)`;
+    if (this.shape === "circle") {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (this.shape === "square") {
+      ctx.fillRect(this.x - this.r, this.y - this.r, this.r * 2, this.r * 2);
+    }
     this.updatePosition();
   };
 }
