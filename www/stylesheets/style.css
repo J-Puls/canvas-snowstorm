@@ -56,11 +56,11 @@ button:focus {
   border: 1px solid gray;
 }
 #randomize > span {
-  animation: bg-slide 5s linear infinite;
-  background-size: 200%;
   background: linear-gradient(90deg, orange, yellow, green, cyan, blue, violet);
+  background-size: 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: bg-slide 5s linear infinite;
 }
 .slider {
   display: flex;
