@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="stylesheets/style.css" />
+    <title>☃ canvas-snowstorm ☃</title>
+  </head>
+  <body>
+    <main class="snowstorm-container">
+      <h2>☃ canvas-snowstorm ☃</h2>
+      <div class="controls">
+        <div class="sliders">
+          <div class="slider">
+            <label for="hue">Hue</label>
+            <input
+              id="hue"
+              type="range"
+              min="0"
+              max="360"
+              value="180"
+              step="1"
+            />
+          </div>
+          <div class="slider">
+            <label for="scale">Scale</label>
+            <input
+              id="scale"
+              type="range"
+              min=".5"
+              max="5"
+              value="1"
+              step=".5"
+            />
+          </div>
+        </div>
+        <div class="buttons">
+          <button id="playPause">Pause</button>
+          <button id="randomize"><span> Randomize</span></button>
+          <button id="changeShape">Shape</button>
+          <button id="reset">Reset</button>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <a href="https://jpuls.dev" rel="noreferrer noopener" target="_blank"
+        >developer</a
+      >
+      <a
+        href="https://github.com/J-Puls/canvas-snowstorm"
+        rel="noreferrer noopener"
+        target="_blank"
+        >github</a
+      >
+      <a
+        href="https://www.npmjs.com/package/canvas-snowstorm"
+        rel="noreferrer noopener"
+        target="_blank"
+        >npm package</a
+      >
+    </footer>
+    <script src="js/script.js" type="module"></script>
+  </body>
+</html>

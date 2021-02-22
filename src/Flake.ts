@@ -39,10 +39,12 @@ export class Flake {
     this.shape = shape;
     this.cycle = cycle;
   }
+
   updatePosition = () => {
+    // if flake is at the bottom of the container
     if (this.y >= this.h) {
-      this.y = -this.r;
-      this.x > this.w / 2 ? this.w / 2 - this.startX : this.startX;
+      this.y = -this.r;                                             // set its y coordinate to the top of the container
+      // this.x > this.w / 2 ? this.w / 2 - this.startX : this.startX;
       this.dx = this.dy / 2;
     } else {
       this.y += this.dy;
@@ -58,6 +60,7 @@ export class Flake {
         : (this.dxLimit = -this.dxLimit);
     }
   };
+
   draw = (ctx: CanvasRenderingContext2D) => {
     if (this.cycle) {
       this.color.h = this.color.h < 360 ? this.color.h + 1 : 0;

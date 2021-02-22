@@ -1,7 +1,7 @@
-import Flake from "./Flake";
-import generateFlakes from "./generateFlakes";
-import randomColor from "./randomColor";
-import { HSLColor, SnowOptions } from "./customTypes";
+import Flake from "./Flake.js";
+import generateFlakes from "./generateFlakes.js";
+import randomColor from "./randomColor.js";
+import { HSLColor, SnowOptions } from "./customTypes.js";
 
 class Snow {
   amount: number;
@@ -39,17 +39,22 @@ class Snow {
     this.renderer;
 
     this.drawFlakes = (elapsedTime) => {
-      // Calculate time delta from last render
+      // calculate time delta from last render
       const delta = elapsedTime - (this.lastFrameTime || 0);
-      // Queue an animation frame
+
+      // queue an animation frame
       requestAnimationFrame(this.drawFlakes);
-      // Skip this render if fps interval has not been reached or if paused
+
+      // skip this render if fps interval has not been reached or if paused
       if ((this.lastFrameTime && delta < this.fps) || this.isPaused) return;
-      // Update the previous render time for next delta calculation
+
+      // update the previous render time for next delta calculation
       this.lastFrameTime = elapsedTime;
-      // Render frame
+
+      // clear frame
       this.ctx.clearRect(0, 0, this.w, this.h);
 
+      // render each flake
       for (const f of this.flakes) {
         f.draw(this.ctx);
       }
@@ -58,7 +63,7 @@ class Snow {
 
   initialize = (parent: HTMLElement) => {
     this.parent = parent;
-    this.w = parent.clientWidth;
+    this.w = parent.clientWidth * 1.5;
     this.h = parent.clientHeight;
     this.flakes = generateFlakes(
       this.speed,
