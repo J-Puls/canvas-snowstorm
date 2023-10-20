@@ -10,9 +10,15 @@ export class Flake {
             }
             else {
                 this.y += this.dy;
-                this.x += this.dx;
+                // if the flake is off screen right, reset it to the left. Otherwise update from the delta
+                if (this.x > this.w)
+                    this.x = 0;
+                else
+                    this.x += this.dx;
             }
-            if (this.dxLimit < 0) {
+            if (this.x > this.w)
+                this.x = 0;
+            else if (this.dxLimit < 0) {
                 this.dx > this.dxLimit
                     ? (this.dx -= 0.005)
                     : (this.dxLimit = -this.dxLimit);
@@ -55,7 +61,8 @@ export class Flake {
         this.w = w;
         this.x = x;
         this.y = y;
-        this.dy = Math.random() * dy;
+        this.dyScaler = Math.random() * 2;
+        this.dy = this.dyScaler * dy;
         this.dx = this.dy / 2;
         this.dxLimit = -this.dx;
     }

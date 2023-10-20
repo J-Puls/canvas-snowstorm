@@ -21,6 +21,9 @@ class Snow {
   w: number;
   renderer: number;
   VALID_SHAPES: Array<string>;
+  render_even: boolean;
+  filterFlakes: (even: boolean) => Array<Flake>;
+
   constructor(options: SnowOptions) {
 
     this.VALID_SHAPES = ["circle", "square"];
@@ -41,6 +44,13 @@ class Snow {
     this.ctx = this.canvas.getContext("2d");
     this.parent;
     this.renderer;
+    this.render_even = false;
+
+    this.filterFlakes = (even) => this.flakes
+        .map((element, index) => ({ element, index }))
+        .filter(({ index }) => (even ? index % 2 === 0 : index % 2 !== 0))
+        .map(({ element }) => element);
+    
 
     this.drawFlakes = (elapsedTime) => {
 
@@ -59,11 +69,14 @@ class Snow {
       // clear frame
       this.ctx.clearRect(0, 0, this.w, this.h);
 
+      const to_update = this.filterFlakes(this.render_even);
+      this.render_even = !this.render_even;
+
       // draw all flakes to canvas
       this.flakes.forEach(f => f.draw(this.ctx))
       
       // update all flake positions for next frame
-      this.flakes.forEach(f => f.updatePosition())
+      to_update.forEach(f => f.updatePosition())
       
     };
   }
@@ -139,6 +152,14 @@ class Snow {
 
   changeScale = (newScale: number) => (newScale !== this.scale) && this.flakes.forEach(f => f.r = newScale);
   
+  changeSpeed = (newSpeed: number) => {
+    this.speed = Number(newSpeed);
+    this.flakes.forEach(f => {
+      f.dy = f.dyScaler * this.speed
+      f.dx = f.dy / 2;
+      f.dxLimit = -f.dx;
+    });
+}
 }
 
 export default Snow;

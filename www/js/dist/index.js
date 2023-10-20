@@ -41,6 +41,14 @@ class Snow {
         this.randomizeColors = () => this.flakes.forEach(f => f.color = randomColor());
         this.changeColor = (color) => this.flakes.forEach(f => f.color = color);
         this.changeScale = (newScale) => (newScale !== this.scale) && this.flakes.forEach(f => f.r = newScale);
+        this.changeSpeed = (newSpeed) => {
+            this.speed = Number(newSpeed);
+            this.flakes.forEach(f => {
+                f.dy = f.dyScaler * this.speed;
+                f.dx = f.dy / 2;
+                f.dxLimit = -f.dx;
+            });
+        };
         this.VALID_SHAPES = ["circle", "square"];
         this.cycleColors = options.cycleColors || false;
         this.scale = options.scale || 1;
@@ -58,6 +66,11 @@ class Snow {
         this.ctx = this.canvas.getContext("2d");
         this.parent;
         this.renderer;
+        this.render_even = false;
+        this.filterFlakes = (even) => this.flakes
+            .map((element, index) => ({ element, index }))
+            .filter(({ index }) => (even ? index % 2 === 0 : index % 2 !== 0))
+            .map(({ element }) => element);
         this.drawFlakes = (elapsedTime) => {
             // calculate time delta from last render
             const delta = elapsedTime - (this.lastFrameTime || 0);
@@ -70,12 +83,12 @@ class Snow {
             this.lastFrameTime = elapsedTime;
             // clear frame
             this.ctx.clearRect(0, 0, this.w, this.h);
+            const to_update = this.filterFlakes(this.render_even);
+            this.render_even = !this.render_even;
+            // draw all flakes to canvas
             this.flakes.forEach(f => f.draw(this.ctx));
-            this.flakes.forEach(f => f.updatePosition());
-            // // render each flake
-            // for (const f of this.flakes) {
-            //   f.draw(this.ctx);
-            // }
+            // update all flake positions for next frame
+            to_update.forEach(f => f.updatePosition());
         };
     }
 }
