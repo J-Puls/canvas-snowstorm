@@ -1,6 +1,6 @@
 {
   "name": "canvas-snowstorm",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A dynamically generated HTML Canvas snow animation, written in TypeScript. ☃",
   "main": "dist/index.js",
   "scripts": {
