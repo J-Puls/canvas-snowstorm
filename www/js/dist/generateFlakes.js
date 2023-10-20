@@ -10,7 +10,17 @@ export const generateFlakes = (speed, scale, amount, color, h, w, cycle) => {
     const flakes = [];
     for (let i = 0; i < amount; i++) {
         const clr = color === "random" ? randomColor() : color;
-        flakes.push(new Flake(scale, randomX(), randomY(), speed, clr, h, w, "square", cycle));
+        flakes.push(new Flake({
+            color: clr,
+            cycle,
+            dy: speed,
+            h,
+            r: scale,
+            shape: "square",
+            w,
+            x: randomX(),
+            y: randomY(),
+        }));
     }
     return flakes;
 };

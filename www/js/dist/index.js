@@ -16,10 +16,10 @@ class Snow {
             requestAnimationFrame(this.drawFlakes);
         };
         this.inject = () => this.parent.appendChild(this.canvas);
-        this.start = () => (this.renderer = requestAnimationFrame(this.drawFlakes));
-        this.pause = () => (this.isPaused = true);
-        this.play = () => (this.isPaused = false);
-        this.toggle = () => (this.isPaused = !this.isPaused);
+        this.start = () => this.renderer = requestAnimationFrame(this.drawFlakes);
+        this.pause = () => this.isPaused = true;
+        this.play = () => this.isPaused = false;
+        this.toggle = () => this.isPaused = !this.isPaused;
         this.restart = () => {
             cancelAnimationFrame(this.renderer);
             this.initialize(this.parent);
@@ -27,42 +27,21 @@ class Snow {
             this.inject();
             this.renderer = requestAnimationFrame(this.drawFlakes);
         };
-        this.cycleShape = () => {
-            for (const f of this.flakes) {
-                f.shape = f.shape === "circle" ? "square" : "circle";
-            }
-        };
+        this.cycleShape = () => this.flakes.forEach(f => f.shape = f.shape === "circle" ? "square" : "circle");
         this.setShape = (shape) => {
-            if (!["circle", "square"].includes(shape)) {
-                console.error(`'${shape}'`, "is not a valid shape. Must be 'circle' or 'square'");
-                return;
+            if (!this.VALID_SHAPES.includes(shape)) {
+                return console.error(`'${shape}' is not a valid shape. Must be 'circle' or 'square'`);
             }
             if (this.flakes[0].shape === shape)
                 return;
-            for (const f of this.flakes) {
-                f.shape = shape;
-            }
+            this.flakes.forEach(f => f.shape = shape);
         };
-        this.toggleCycle = () => {
-            for (const f of this.flakes)
-                f.cycle = !f.cycle;
-        };
+        this.toggleCycle = () => this.flakes.forEach(f => f.cycle = !f.cycle);
         this.setRandomize = (val) => (this.cycleColors = val);
-        this.randomizeColors = () => {
-            for (const f of this.flakes)
-                f.color = randomColor();
-        };
-        this.changeColor = (color) => {
-            for (const f of this.flakes)
-                f.color = color;
-        };
-        this.changeScale = (newScale) => {
-            if (newScale === this.scale)
-                return;
-            for (const f of this.flakes) {
-                f.r = newScale;
-            }
-        };
+        this.randomizeColors = () => this.flakes.forEach(f => f.color = randomColor());
+        this.changeColor = (color) => this.flakes.forEach(f => f.color = color);
+        this.changeScale = (newScale) => (newScale !== this.scale) && this.flakes.forEach(f => f.r = newScale);
+        this.VALID_SHAPES = ["circle", "square"];
         this.cycleColors = options.cycleColors || false;
         this.scale = options.scale || 1;
         this.speed = options.speed || 1;
@@ -91,10 +70,12 @@ class Snow {
             this.lastFrameTime = elapsedTime;
             // clear frame
             this.ctx.clearRect(0, 0, this.w, this.h);
-            // render each flake
-            for (const f of this.flakes) {
-                f.draw(this.ctx);
-            }
+            this.flakes.forEach(f => f.draw(this.ctx));
+            this.flakes.forEach(f => f.updatePosition());
+            // // render each flake
+            // for (const f of this.flakes) {
+            //   f.draw(this.ctx);
+            // }
         };
     }
 }
