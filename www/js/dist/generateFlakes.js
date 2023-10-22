@@ -1,6 +1,6 @@
 import Flake from "./Flake.js";
 import { randomColor } from "./randomColor.js";
-export const generateFlakes = (speed, scale, amount, color, h, w, cycle) => {
+export const generateFlakes = ({ speed, scale, amount, color, h, w, cycle, shape }) => {
     const randomX = () => {
         return Math.round(Math.random() * w) + 1;
     };
@@ -16,7 +16,7 @@ export const generateFlakes = (speed, scale, amount, color, h, w, cycle) => {
             dy: speed,
             h,
             r: scale,
-            shape: "square",
+            shape,
             w,
             x: randomX(),
             y: randomY(),
@@ -25,4 +25,3 @@ export const generateFlakes = (speed, scale, amount, color, h, w, cycle) => {
     return flakes;
 };
 export default generateFlakes;
-//# sourceMappingURL=generateFlakes.js.map

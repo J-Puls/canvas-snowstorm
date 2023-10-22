@@ -4,9 +4,9 @@
   "description": "A dynamically generated HTML Canvas snow animation, written in TypeScript. ☃",
   "main": "dist/index.js",
   "scripts": {
-    "build": "echo \"Compiling to dist/...\" && tsc --p .",
+    "build": "echo \"Compiling to dist/...\" && tsc --p . && echo \"Duplicating dist/...\" && cp -r ./dist/ ./www/js/dist",
     "devBuild": "tsc src/index.ts --outDir ./dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "serve": "serve ./www"
   },
   "repository": {
     "type": "git",

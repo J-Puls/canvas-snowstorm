@@ -14,9 +14,12 @@ globalThis.snowParent = parent;
 const snow = new Snow({
   color: { h: 180, s: 100, l: 75 },
   speed: 1,
-  amount: 100,
-  fps: 30
+  amount: 1000,
+  fps: 30,
+  scale: 2
 });
+
+globalThis.snow = snow;
 
 changeShape.onclick = () => snow.cycleShape();
 randomize.onclick = () => snow.randomizeColors();

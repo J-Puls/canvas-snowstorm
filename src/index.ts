@@ -21,18 +21,19 @@ class Snow {
   w: number;
   renderer: number;
   VALID_SHAPES: Array<string>;
-  render_even: boolean;
+  renderEven: boolean;
   filterFlakes: (even: boolean) => Array<Flake>;
+  shapeIndex: number;
 
   constructor(options: SnowOptions) {
 
-    this.VALID_SHAPES = ["circle", "square"];
+    this.VALID_SHAPES = ["circle", "square", "triangle", "pentagon", "hexagon", "star"];
 
     this.cycleColors = options.cycleColors || false;
     this.scale = options.scale || 1;
     this.speed = options.speed || 1;
     this.isPaused = false;
-    this.fps = Math.floor(1000 / options.fps || 30);
+    this.fps = Math.floor(1000 / (options.fps || 30));
     this.lastFrameTime = 0;
     this.amount = options.amount || 100;
     this.color = options.color || { h: 0, s: 0, l: 100 };
@@ -44,7 +45,8 @@ class Snow {
     this.ctx = this.canvas.getContext("2d");
     this.parent;
     this.renderer;
-    this.render_even = false;
+    this.renderEven = false;
+    this.shapeIndex = 0;
 
     this.filterFlakes = (even) => this.flakes
         .map((element, index) => ({ element, index }))
@@ -52,33 +54,36 @@ class Snow {
         .map(({ element }) => element);
     
 
-    this.drawFlakes = (elapsedTime) => {
+      this.drawFlakes = (currentTime) => {
 
-      // calculate time delta from last render
-      const delta = elapsedTime - (this.lastFrameTime || 0);
+        if (!this.isPaused) {
 
-      // queue an animation frame
-      requestAnimationFrame(this.drawFlakes);
-
-      // skip this render if fps interval has not been reached or if paused
-      if ((this.lastFrameTime && delta < this.fps) || this.isPaused) return;
-
-      // update the previous render time for next delta calculation
-      this.lastFrameTime = elapsedTime;
-
-      // clear frame
-      this.ctx.clearRect(0, 0, this.w, this.h);
-
-      const to_update = this.filterFlakes(this.render_even);
-      this.render_even = !this.render_even;
-
-      // draw all flakes to canvas
-      this.flakes.forEach(f => f.draw(this.ctx))
+           // Calculate delta time (elapsed time since the last frame)
+        const deltaTime = currentTime - (this.lastFrameTime || 0);
       
-      // update all flake positions for next frame
-      to_update.forEach(f => f.updatePosition())
+        // Check if the desired interval has passed (target interval for 60 FPS)
+        if (deltaTime >= this.fps) {
+          // Update the previous frame time
+          this.lastFrameTime = currentTime;
       
-    };
+          // Clear the canvas
+          this.ctx.clearRect(0, 0, this.w, this.h);
+      
+          const to_update = this.filterFlakes(this.renderEven);
+          this.renderEven = !this.renderEven;
+      
+          // Draw all flakes to canvas
+          this.flakes.forEach((f) => f.draw(this.ctx));
+      
+          // Update all flake positions for the next frame
+          to_update.forEach((f) => f.updatePosition());
+        }
+        };
+      
+        // Request the next frame to render
+        requestAnimationFrame(this.drawFlakes);
+
+      };
   }
 
   initialize = (parent: HTMLElement) => {
@@ -86,15 +91,17 @@ class Snow {
     this.parent = parent;
     this.w = parent.clientWidth * 1.5;
     this.h = parent.clientHeight;
-    this.flakes = generateFlakes(
-      this.speed,
-      this.scale,
-      this.amount,
-      this.color,
-      this.h,
-      this.w,
-      this.cycleColors
-    );
+
+    this.flakes = generateFlakes({
+      speed: this.speed, 
+      scale: this.scale, 
+      amount: this.amount,
+      color: this.color,
+      h: this.h,
+      w: this.w,
+      cycle: this.cycleColors, 
+      shape: this.VALID_SHAPES[this.shapeIndex] 
+    });
     this.canvas.width = parent.clientWidth;
     this.canvas.height = parent.clientHeight;
 
@@ -128,15 +135,20 @@ class Snow {
 
   };
 
-  cycleShape = () => this.flakes.forEach(f => f.shape = f.shape === "circle" ? "square" : "circle")
+  cycleShape = () => {
+    this.shapeIndex = (this.shapeIndex + 1) % this.VALID_SHAPES.length;
+    const shape = this.VALID_SHAPES[this.shapeIndex];
+  
+    this.flakes.forEach(f => f.shape = shape);
+  }
 
-  setShape = (shape: "circle" | "square") => {
+  setShape = (shape: "circle" | "square" | "triangle") => {
 
     if (!this.VALID_SHAPES.includes(shape)) {
-      return console.error(`'${shape}' is not a valid shape. Must be 'circle' or 'square'`);
+      return console.error(`'Invalid shape: ${shape}'`);
     }
 
-    if (this.flakes[0].shape === shape) return;
+    if (this.shapeIndex === this.VALID_SHAPES.indexOf(shape)) return;
 
     this.flakes.forEach(f => f.shape = shape);
     

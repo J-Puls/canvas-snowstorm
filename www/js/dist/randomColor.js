@@ -6,4 +6,3 @@ export const randomColor = () => {
     };
 };
 export default randomColor;
-//# sourceMappingURL=randomColor.js.map
